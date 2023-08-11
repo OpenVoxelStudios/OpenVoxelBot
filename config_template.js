@@ -26,4 +26,8 @@ module.exports = {
        // Just add these 5 lines below, to add another item, just add these lines again
     ],
     color: '#xxxxxx', // A hexadecimal color
+    server: { // The Minecraft Server config
+        ip: 'localhost', // The Minecraft IP address
+        port: 25566, // The port to connect to
+    },
 }
