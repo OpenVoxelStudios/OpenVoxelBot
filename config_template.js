@@ -3,6 +3,7 @@ module.exports = {
     channels: { // Put channel IDs here, get them with the developer mode
         welcome: '',
         log: '',
+        counter: '',
     },
     coinByMessage: {
         messageCount: 10, // Number of messages to send
