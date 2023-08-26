@@ -4,7 +4,10 @@ module.exports = {
         welcome: '',
         log: '',
         counter: '',
+        copychan: '',
     },
+    copychanhook: '', // The webhook URL for the copy channel
+
     coinByMessage: {
         messageCount: 10, // Number of messages to send
         points: 1,        // To get that amount of points

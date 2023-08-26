@@ -1,10 +1,14 @@
-const { Client, Message, EmbedBuilder } = require("discord.js");
-const { coinByMessage, coinForInvite, channels } = require("../config");
+const { Client, Message, EmbedBuilder, WebhookClient } = require("discord.js");
+const { coinByMessage, coinForInvite, channels, copychanhook } = require("../config");
+
+const copyHook = new WebhookClient({ url: copychanhook });
 
 var countr = {
     lastNum: undefined,
     lastUser: undefined,
 };
+
+var copy = undefined;
 
 function isValid(nbr) {
     if (nbr.replace(/ /g, '') == '') return false;
@@ -21,8 +25,31 @@ module.exports = {
      * @param {Message} message 
      */
     async run(client, message) {
+        if (message.webhookId) return;
+
+        // The copy channel thing
+        if (!message.author.bot && message.channel.id == channels.copychan) {
+            if (message.content.startsWith('⚠️') && message.member.permissions.has('Administrator')) return;
+            let text = message.content;
+
+            if (copy == message.author.id) return message.delete();
+            if (await client.db.get('SELECT * FROM copychan WHERE text = ?', [text])) return await message.delete();
+
+            copy = message.author.id;
+            await client.db.run('INSERT INTO copychan (text, id) VALUES (?, ?)', [text, message.member.id]);
+
+            await copyHook.send({
+                content: `||<@${message.author.id}>:|| ${text}`,
+                username: `${message.member.displayName} (${message.member.user.username})`,
+                avatarURL: message.member.displayAvatarURL({ forceStatic: false }),
+            });
+
+            await message.delete();
+        };
+
         // The counter thing
         if (!message.author.bot && message.channel.id == channels.counter) {
+            if (message.content.startsWith('⚠️') && message.member.permissions.has('Administrator')) return;
             // If countr isn't fetched
 
             if (countr.lastNum == undefined) {

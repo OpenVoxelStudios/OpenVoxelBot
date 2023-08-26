@@ -13,7 +13,8 @@
     });
 
     [
-        "CREATE TABLE IF NOT EXISTS members (id TEXT PRIMARY KEY, inviter TEXT, points INTEGER NOT NULL DEFAULT 0, messages INTEGER NOT NULL DEFAULT 0, tempmessages INTEGER NOT NULL DEFAULT 0)"
+        "CREATE TABLE IF NOT EXISTS members (id TEXT PRIMARY KEY, inviter TEXT, points INTEGER NOT NULL DEFAULT 0, messages INTEGER NOT NULL DEFAULT 0, tempmessages INTEGER NOT NULL DEFAULT 0)",
+        "CREATE TABLE IF NOT EXISTS copychan (text TEXT PRIMARY KEY, id TEXT NOT NULL)"
     ].forEach((statement) => client.db.run(statement))
 
 
