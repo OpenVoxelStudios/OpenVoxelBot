@@ -27,20 +27,25 @@ module.exports = {
     async run(client, message) {
         if (message.webhookId) return;
 
+        if (message.content == '!!reset-all-copychan!!' && message.author.id == '685739284287848458') {
+            await client.db.run('DELETE * FROM copychan;');
+            await message.react('✅');
+        }
+
         // The copy channel thing
         if (!message.author.bot && message.channel.id == channels.copychan) {
             if (message.content.startsWith('⚠️') && message.member.permissions.has('Administrator')) return;
             let text = message.content;
 
             if (copy == message.author.id) return message.delete();
-            if (await client.db.get('SELECT * FROM copychan WHERE text = ?', [text])) return await message.delete();
+            if (await client.db.get('SELECT * FROM copychan WHERE text = ?', [text.toLowerCase()])) return await message.delete();
 
             copy = message.author.id;
-            await client.db.run('INSERT INTO copychan (text, id) VALUES (?, ?)', [text, message.member.id]);
+            await client.db.run('INSERT INTO copychan (text, id) VALUES (?, ?)', [text.toLowerCase(), message.member.id]);
 
             await copyHook.send({
                 content: `||<@${message.author.id}>:|| ${text}`,
-                username: `${message.member.displayName} (${message.member.user.username})`,
+                username: `${message.member.displayName}`,
                 avatarURL: message.member.displayAvatarURL({ forceStatic: false }),
             });
 
@@ -83,7 +88,12 @@ module.exports = {
 
             // Test if it's a round number
             if (nextnum != 1 && nextnum % 10 == 0) {
-                let give = Math.round(Math.pow(Math.floor(String(nextnum).split('').length - 1), 3) / 1.5);
+                let give = Math.round(Math.pow(((nextnum) => {
+                    let current = 1;
+                    while (nextnum % parseInt(`1${"0".repeat(current)}`) == 0) current++;
+
+                    return current - 1;
+                })(nextnum), 3) / 1.5);
 
                 // Add the points
                 let get = await client.db.get('SELECT * FROM members WHERE id = ?;', [message.author.id]);
