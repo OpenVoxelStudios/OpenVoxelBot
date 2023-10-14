@@ -8,6 +8,7 @@ module.exports = {
      * @param {import("discord.js").Interaction} interaction 
      */
     async run(client, interaction) {
+        if (interaction?.commandName != 'rank') return
 
         if (interaction.isCommand()) {
             require(`../commands/${interaction.commandName}`).run(client, interaction);

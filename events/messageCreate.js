@@ -1,5 +1,5 @@
 const { Client, Message, EmbedBuilder, WebhookClient } = require("discord.js");
-const { coinByMessage, coinForInvite, channels, copychanhook } = require("../config");
+const { coinByMessage, coinForInvite, channels, copychanhook, message_reward } = require("../config");
 
 const copyHook = new WebhookClient({ url: copychanhook });
 
@@ -33,7 +33,7 @@ module.exports = {
         }
 
         // The copy channel thing
-        if (!message.author.bot && message.channel.id == channels.copychan) {
+        /*if (!message.author.bot && message.channel.id == channels.copychan) {
             if (message.content.startsWith('⚠️') && message.member.permissions.has('Administrator')) return;
             let text = message.content;
 
@@ -50,7 +50,7 @@ module.exports = {
             });
 
             await message.delete();
-        };
+        };*/
 
         // The counter thing
         if (!message.author.bot && message.channel.id == channels.counter) {
@@ -146,6 +146,24 @@ module.exports = {
                         let get2 = await client.db.get('SELECT * FROM members WHERE id = ?', [get?.inviter]);
                         if (get2) await client.db.run('UPDATE members SET points = ? WHERE id = ?;', [parseInt(get2?.points) + coinForInvite.points, get?.inviter]);
                     }
+                }
+
+                // The message = role system
+                let getRole = message_reward.filter(r => r.messages == newMessages)?.[0];
+                if (getRole) {
+                    // Tell the user he got a role
+                    await message.member.roles.add(getRole.role);
+                    await message.react('⭐️');
+                    let msg = await message.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Yellow')
+                                .setTitle(`🎉 Congratulations!`)
+                                .setDescription(`You just won the **${getRole.name} role** for your **${getRole.messages}th** message!`)
+                        ]
+                    });
+
+                    setTimeout(async (msg) => await msg.delete(), 10000, msg);
                 }
             }
         }

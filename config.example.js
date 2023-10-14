@@ -23,7 +23,20 @@ module.exports = {
         {
             name: "NAME OF THE THING",
             price: PRICE,
-            role: "ROLE GIVEN ONCE BUYED (role ID)"",
+            role: "ROLE GIVEN ONCE BUYED (role ID)",
+        },
+        
+        */
+       // Just add these 5 lines below, to add another item, just add these lines again
+    ],
+    message_reward: [
+        // Format:
+        /* 
+        
+        {
+            name: "Name of the Role",
+            messages: NUMBER,
+            role: "ROLE GIVEN (role ID)",
         },
         
         */
