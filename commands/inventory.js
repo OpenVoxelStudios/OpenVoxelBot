@@ -38,7 +38,10 @@ module.exports = {
                     .setTitle(`${(interaction.options.getUser('user')?.id) ? `${interaction.guild.members.cache.get(interaction.options.getUser('user')?.id).displayName}'s` : 'Your'} Inventory`)
                     .setAuthor({ name: (interaction.options.getUser('user')?.id) ? interaction.guild.members.cache.get(interaction.options.getUser('user')?.id).displayName : interaction.member.displayName, iconURL: (interaction.options.getUser('user')?.id) ? interaction.guild.members.cache.get(interaction.options.getUser('user')?.id).displayAvatarURL() : interaction.member.displayAvatarURL() })
                     .setFooter({ text: `Points can be earned by sending messages or inviting active people!`, iconURL: client.user.displayAvatarURL() })
-                    .setDescription(`${(interaction.options.getUser('user')?.id) ? `<@${interaction.options.getUser('user')?.id}>` : 'You'} currently have **${get?.points || 0}** points.`)
+                    .setDescription(
+                        `${(interaction.options.getUser('user')?.id) ? `<@${interaction.options.getUser('user')?.id}>` : 'You'} currently have **${get?.points || 0}** points.\n` +
+                        `and has sent **${get?.messages || 0}** messages.`
+                    )
             ]
         });
     },
