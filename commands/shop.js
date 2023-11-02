@@ -13,11 +13,11 @@ module.exports = {
     async getDataFor(client, interaction) {
         let get = await client.db.get('SELECT * FROM members WHERE id = ?', [interaction.user.id]);
 
+        let desc = `You can earn points by sending messages or inviting active people!`;
         let embed = new EmbedBuilder()
             .setColor(color)
             .setTitle('OpenVoxel\'s Shop')
             .setAuthor({ name: `${get?.points || 0} points - ${interaction.member.displayName}`, iconURL: interaction.member.displayAvatarURL() })
-            .setDescription(`You can earn points by sending messages or inviting active people!`)
             .setFooter({ text: 'Everything you buy is converted into a role that is added on your profile, if you leave you loose your roles! (but not your points)' });
 
         let selectMenu = new StringSelectMenuBuilder()
@@ -26,11 +26,7 @@ module.exports = {
             .setPlaceholder('Click to buy!');
 
         for (item of shop) {
-            embed.addFields({
-                name: item.name,
-                value: `${item.price} points`,
-                inline: true
-            });
+            desc += `\n### ${item.name} (${item.price} points)\n> ${item.description}`
 
             selectMenu.addOptions(
                 new StringSelectMenuOptionBuilder()
@@ -39,6 +35,8 @@ module.exports = {
                     .setDescription(`This costs ${item.price} points`)
             )
         }
+
+        embed.setDescription(desc);
 
         return {
             embeds: [embed],
