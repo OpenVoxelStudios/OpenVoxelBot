@@ -125,7 +125,7 @@ module.exports = {
 
 
         // The message = point system
-        if (!message.author.bot && message.channel.id != channels.counter) {
+        if (!message.author.bot && message.channel.id != channels.counter && message.channel?.type != 2) { // 2 here is GuildVoiceChannel
             let get = await client.db.get('SELECT * FROM members WHERE id = ?', [message.member.id]);
 
             if (!get) await client.db.run('INSERT INTO members (id, messages, tempmessages) VALUES (?, 1, 1);', [message.member.id])
